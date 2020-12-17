@@ -3,11 +3,9 @@
 <html>
 
 <head>
-    <title>Example 10.04 - LightMap</title>
+    <title>Fake Shadow</title>
     <script type="text/javascript" src="../libs/three.js"></script>
-
     <script type="text/javascript" src="../libs/stats.js"></script>
-    <script type="text/javascript" src="../libs/dat.gui.js"></script>
     <style>
         body {
             /* set margin to 0 and overflow to hidden, to go fullscreen */
@@ -49,25 +47,13 @@
 
         var groundGeom = new THREE.PlaneGeometry(95, 95, 1, 1);
         var lm = THREE.ImageUtils.loadTexture('../assets/textures/lightmap/lm-1.png');
-        var wood = THREE.ImageUtils.loadTexture('../assets/textures/general/floor-wood.jpg');
         var groundMaterial = new THREE.MeshBasicMaterial(
                 {
-                    color: 0x777777,
+                    color: 0xffffff,
                     lightMap: lm,
-                    map: wood
                 });
 
-
-//        console.log(groundGeom.faceVertexUvs[1]);
-        // http://stackoverflow.com/questions/15137695/three-js-lightmap-causes-an-error-webglrenderingcontext-gl-error-gl-invalid-op
-        // https://github.com/mrdoob/three.js/pull/2372
-        // lightmaps use own mapping of uvs (faceVertexUvs[1])
-        // so need to create those. Reason is explained
-        // here. So we can use a low res map for lightmap
-        // and a high res map for textures.
         groundGeom.faceVertexUvs[1] = groundGeom.faceVertexUvs[0];
-//        console.log(groundGeom.faceVertexUvs[1]);
-
 
         var groundMesh = new THREE.Mesh(groundGeom, groundMaterial);
 
@@ -75,20 +61,16 @@
         groundMesh.position.y = 0;
         scene.add(groundMesh);
 
-
         var cubeGeometry = new THREE.BoxGeometry(12, 12, 12);
         var cubeGeometry2 = new THREE.BoxGeometry(6, 6, 6);
-
 
         var meshMaterial = new THREE.MeshBasicMaterial();
         meshMaterial.map = THREE.ImageUtils.loadTexture('../assets/textures/general/stone.jpg');
 
-
         var cube = new THREE.Mesh(cubeGeometry, meshMaterial);
         var cube2 = new THREE.Mesh(cubeGeometry2, meshMaterial);
-        cube.position.set(0.9, 6, -12);
-        cube2.position.set(-13.2, 3, -6);
-
+        cube.position.set(0.5, 6, 0);
+        cube2.position.set(-13.6, 3, 0);
 
         // add the sphere to the scene
         scene.add(cube);
@@ -104,10 +86,8 @@
         var ambientLight = new THREE.AmbientLight(0x0c0c0c);
         scene.add(ambientLight);
 
-
         // add the output of the renderer to the html element
         document.getElementById("WebGL-output").appendChild(renderer.domElement);
-
 
         render();
 
@@ -120,11 +100,8 @@
         }
 
         function initStats() {
-
             var stats = new Stats();
-
             stats.setMode(0); // 0: fps, 1: ms
-
 
             // Align top-left
             stats.domElement.style.position = 'absolute';
