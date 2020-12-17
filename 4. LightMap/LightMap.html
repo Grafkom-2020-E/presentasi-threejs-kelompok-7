@@ -47,10 +47,12 @@
 
         var groundGeom = new THREE.PlaneGeometry(95, 95, 1, 1);
         var lm = THREE.ImageUtils.loadTexture('../assets/textures/lightmap/lm-1.png');
+        var wood = THREE.ImageUtils.loadTexture('../assets/textures/general/ground.jpg');
         var groundMaterial = new THREE.MeshBasicMaterial(
                 {
                     color: 0xffffff,
                     lightMap: lm,
+                    map: wood
                 });
 
         groundGeom.faceVertexUvs[1] = groundGeom.faceVertexUvs[0];
