@@ -5,7 +5,6 @@
 <head>
     <title>Basic textures</title>
     <script type="text/javascript" src="../libs/three.js"></script>
-
     <script type="text/javascript" src="../libs/stats.js"></script>
     <script type="text/javascript" src="../libs/dat.gui.js"></script>
     <style>
@@ -90,6 +89,7 @@
 
         function createMesh(geom, imageFile) {
             var texture = THREE.ImageUtils.loadTexture("../assets/textures/general/" + imageFile);
+            //var texture = THREE.ImageUtils.loadTexture("../assets/textures/general/" + imageFile, {}, function(){renderer.render(scene); });        
             var mat = new THREE.MeshPhongMaterial();
             mat.map = texture;
 
