@@ -3,11 +3,12 @@
 <html>
 
 <head>
-    <title>Example 10.01 - Basic textures</title>
+    <title>Basic textures</title>
     <script type="text/javascript" src="../libs/three.js"></script>
 
     <script type="text/javascript" src="../libs/stats.js"></script>
     <script type="text/javascript" src="../libs/dat.gui.js"></script>
+    <script type="text/javascript" src="../libs/TGALoader.js"></script>
     <style>
         body {
             /* set margin to 0 and overflow to hidden, to go fullscreen */
@@ -44,17 +45,16 @@
         webGLRenderer.setSize(window.innerWidth, window.innerHeight);
         webGLRenderer.shadowMapEnabled = true;
 
-        var polyhedron = createMesh(new THREE.IcosahedronGeometry(5, 0), "metal-rust.jpg");
+        var polyhedron = createMesh(new THREE.IcosahedronGeometry(5, 0));
         polyhedron.position.x = 12;
         scene.add(polyhedron);
 
-        var sphere = createMesh(new THREE.SphereGeometry(5, 20, 20), "floor-wood.jpg");
+        var sphere = createMesh(new THREE.SphereGeometry(5, 20, 20));
         scene.add(sphere);
 
-        var cube = createMesh(new THREE.BoxGeometry(5, 5, 5), "brick-wall.jpg");
+        var cube = createMesh(new THREE.BoxGeometry(5, 5, 5));
         cube.position.x = -12;
         scene.add(cube);
-        console.log(cube.geometry.faceVertexUvs);
 
         // position and point the camera to the center of the scene
         camera.position.x = 00;
@@ -75,8 +75,6 @@
         // call the render function
         var step = 0;
 
-//        var polyhedron = createMesh(new THREE.PolyhedronGeometry(vertices, faces, controls.radius, controls.detail));
-
         // setup the control gui
         var controls = new function () {
 
@@ -89,7 +87,8 @@
         render();
 
         function createMesh(geom, imageFile) {
-            var texture = THREE.ImageUtils.loadTexture("../assets/textures/general/" + imageFile);
+            var loader = new THREE.TGALoader();
+            var texture = loader.load('../assets/textures/crate_color8.tga');
             var mat = new THREE.MeshPhongMaterial();
             mat.map = texture;
 

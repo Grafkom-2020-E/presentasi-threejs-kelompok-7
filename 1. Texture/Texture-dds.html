@@ -3,12 +3,12 @@
 <html>
 
 <head>
-    <title>Example 10.01 - Basic textures</title>
+    <title>Basic textures</title>
     <script type="text/javascript" src="../libs/three.js"></script>
 
     <script type="text/javascript" src="../libs/stats.js"></script>
     <script type="text/javascript" src="../libs/dat.gui.js"></script>
-    <script type="text/javascript" src="../libs/PVRLoader.js"></script>
+    <script type="text/javascript" src="../libs/DDSLoader.js"></script>
     <style>
         body {
             /* set margin to 0 and overflow to hidden, to go fullscreen */
@@ -88,8 +88,8 @@
         render();
 
         function createMesh(geom, imageFile) {
-            var loader = new THREE.PVRLoader();
-            var texture = loader.load('../assets/textures/tex_base.pvr');
+            var loader = new THREE.DDSLoader();
+            var texture = loader.load('../assets/textures/seafloor.dds');
             var mat = new THREE.MeshPhongMaterial();
             mat.map = texture;
 
