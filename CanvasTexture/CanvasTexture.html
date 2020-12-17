@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>Example 10.09 - Canvas texture</title>
+    <title>Kanvas sebagai Tekstur</title>
     <link href="../libs/literally/css/literally.css" rel="stylesheet">
     <script type="text/javascript" src="../libs/three.js"></script>
 
@@ -16,7 +16,6 @@
 
     <style>
         body {
-            /* set margin to 0 and overflow to hidden, to go fullscreen */
             margin: 0;
             overflow: hidden;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -28,10 +27,7 @@
             margin: auto;
             bottom: 20px;
             position: absolute;
-            x: 0;
-            y: 0;
-        "
-        }
+}
 
         #canvas-output {
             width: 300px;
@@ -44,7 +40,6 @@
 <div id="Stats-output">
 </div>
 
-<!-- Div which will hold the Output -->
 
 <div class="fs-container">
     <div id="canvas-output" style="float:left">
@@ -52,11 +47,10 @@
 </div>
 
 
-<!-- Div which will hold the Output -->
 <div id="WebGL-output">
 </div>
 
-<!-- Javascript code that runs our Three.js examples -->
+
 <script type="text/javascript">
 
 
@@ -65,18 +59,14 @@
     $('#canvas-output').literallycanvas({imageURLPrefix: '../libs/literally/img'});
 
 
-    // once everything is loaded, we run our Three.js stuff.
     function init() {
 
         var stats = initStats();
 
-        // create a scene, that will hold all our elements such as objects, cameras and lights.
         var scene = new THREE.Scene();
 
-        // create a camera, which defines where we're looking at.
         var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-        // create a render and set the size
         var webGLRenderer = new THREE.WebGLRenderer();
         webGLRenderer.setClearColor(new THREE.Color(0xbbbbbb, 1.0));
         webGLRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -88,7 +78,6 @@
         scene.add(cube);
 
 
-        // position and point the camera to the center of the scene
         camera.position.x = 00;
         camera.position.y = 12;
         camera.position.z = 28;
@@ -101,15 +90,11 @@
         light.position.set(0, 30, 20);
         scene.add(light);
 
-        // add the output of the renderer to the html element
         document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
 
-        // call the render function
         var step = 0;
 
-//        var polyhedron = createMesh(new THREE.PolyhedronGeometry(vertices, faces, controls.radius, controls.detail));
 
-        // setup the control gui
         var controls = new function () {
 
             this.showTexture = true;
@@ -160,7 +145,7 @@
             cube.rotation.x += 0.01;
 
             cube.material.map.needsUpdate = true;
-            // render using requestAnimationFrame
+
             requestAnimationFrame(render);
             webGLRenderer.render(scene, camera);
         }
@@ -168,9 +153,8 @@
         function initStats() {
 
             var stats = new Stats();
-            stats.setMode(0); // 0: fps, 1: ms
+            stats.setMode(0);
 
-            // Align top-left
             stats.domElement.style.position = 'absolute';
             stats.domElement.style.left = '0px';
             stats.domElement.style.top = '0px';
@@ -182,24 +166,5 @@
     }
     window.onload = init;
 </script>
-
-<!--var canvas2  = new fabric.Canvas('c2', { backgroundColor: "#000", renderOnAddition: false }),-->
-<!--results2 = document.getElementById('results-c2');-->
-
-<!--startTimer();-->
-<!--for (i = 1000; i >= 0; i--) {-->
-<!--dot = new fabric.Circle({-->
-<!--left:   getRandomInt(0, 400),-->
-<!--top:    getRandomInt(0, 350),-->
-<!--radius: 3,-->
-<!--fill:   rainbow[getRandomInt(0, rainbowEnd)]-->
-<!--});-->
-<!--canvas2.add(dot);-->
-<!--}-->
-<!--canvas2.renderAll(); // Note, calling renderAll() is important in this case-->
-<!--results2.innerHTML = 'Rendering 1000 elements using canvas.renderOnAddition = false in ' + stopTimer() + 'ms';-->
-
-
-<!--value = pn.noise(x, y, 0);-->
 </body>
 </html>
