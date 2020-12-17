@@ -33,8 +33,29 @@
         // create a scene, that will hold all our elements such as objects, cameras and lights.
         var scene = new THREE.Scene();
 
+        function CreateCameraOrtho(){
+            let zoom = 0.05;
+            let cam = new THREE.OrthographicCamera(window.innerWidth * zoom / -2, window.innerWidth * zoom / 2, window.innerHeight * zoom / 2, window.innerHeight * zoom / -2, 1, 1000);
+            cam.position.x = 0;
+            cam.position.y = 0;
+            cam.position.z = 10;
+            cam.lookAt(new THREE.Vector3(0, 0, 0));
+            return cam;
+        }
+
+        function CreateCameraPrespective(){
+            let cam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            cam.position.x = 0;
+            cam.position.y = 12;
+            cam.position.z = 38;
+            cam.lookAt(new THREE.Vector3(0, 0, 0));
+            return cam;
+        }
+
         // create a camera, which defines where we're looking at.
-        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        // var camera = CreateCameraPrespective();
+        var camera = CreateCameraOrtho();
+        scene.add(camera);
 
         // create a render and set the size
         var webGLRenderer = new THREE.WebGLRenderer();
@@ -42,76 +63,93 @@
         webGLRenderer.setSize(window.innerWidth, window.innerHeight);
         webGLRenderer.shadowMapEnabled = true;
 
-        var sphere1 = createMesh(new THREE.BoxGeometry(15, 15, 15), "mip-low-res-enlarged(1).png", THREE.NearestFilter);
-        sphere1.rotation.y = 0;
-        sphere1.position.x = 12;
-        scene.add(sphere1);
+        var box1 = createMesh(new THREE.BoxGeometry(10, 10, 10), "mip-low-res-enlarged(1).png", THREE.NearestFilter);
+        box1.rotation.y = 0;
+        box1.position.x = -24;
+        scene.add(box1);
 
-        var sphere2 = createMesh(new THREE.BoxGeometry(15, 15, 15), "mip-low-res-enlarged(1).png", THREE.NearestMipmapNearestFilter);
-        sphere2.rotation.y = 0;
-        sphere2.position.x = -12;
-        scene.add(sphere2);
-        console.log(sphere2.geometry.faceVertexUvs);
+        var box2 = createMesh(new THREE.BoxGeometry(10, 10, 10), "mip-low-res-enlarged(1).png", THREE.LinearFilter);
+        box2.rotation.y = 0;
+        box2.position.x = -8;
+        scene.add(box2);
 
-    
+        var box3 = createMesh(new THREE.BoxGeometry(10, 10, 10), "plaster.jpg", THREE.LinearFilter, THREE.NearestMipmapNearestFilter);
+        box3.rotation.y = 0;
+        box3.position.x = 8;
+        scene.add(box3);
 
-        // position and point the camera to the center of the scene
-        camera.position.x = 00;
-        camera.position.y = 12;
-        camera.position.z = 38;
-        camera.lookAt(new THREE.Vector3(0, 0, 0));
+        var box4 = createMesh(new THREE.BoxGeometry(10, 10, 10), "plaster.jpg", THREE.LinearFilter, THREE.NearestFilter);
+        box4.rotation.y = 0;
+        box4.position.x = 24;
+        scene.add(box4);
 
         var ambiLight = new THREE.AmbientLight(0xffffff);
         scene.add(ambiLight);
-
-
 
         // add the output of the renderer to the html element
         document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
 
         // call the render function
         var step = 0;
-
-//        var polyhedron = createMesh(new THREE.PolyhedronGeometry(vertices, faces, controls.radius, controls.detail));
-
-        
-
-
         render();
 
-        function createMesh(geom, imageFile, mipmap) {
+        function createMesh(geom, imageFile, magFilter, minFilter) {
+            var t = THREE.ImageUtils.loadTexture("../assets/textures/general/" + imageFile);
+            var mat = new THREE.MeshBasicMaterial();
 
-            if (mipmap) {
-                var t = THREE.ImageUtils.loadTexture("../assets/textures/general/" + imageFile);
-                t.magFilter = mipmap;
-                t.minFilter = mipmap;
-                var mat2 = new THREE.MeshBasicMaterial();
-                mat2.map = t;
-                var mesh = new THREE.Mesh(geom, mat2);
-                return mesh;
-            } else {
-                var t = THREE.ImageUtils.loadTexture("../assets/textures/general/" + imageFile);
-                var mat1 = new THREE.MeshBasicMaterial({
-                    map: t
-                });
-                var mesh = new THREE.Mesh(geom, mat1);
-                return mesh;
+            if(magFilter){
+                t.magFilter = magFilter;
             }
+ 
+            if (minFilter) {
+                t.minFilter = minFilter;
+            }
+
+            mat.map = t;
+            var mesh = new THREE.Mesh(geom, mat);
 
             return mesh;
         }
 
-        
-
         var invert = 1;
         var phase = 0;
+        var curScale = 1;
+        var isShrink = true;
+        var min = 0.1;
+        var speed = 0.1;
+
+        var time = new Date().getTime();
 
         function render() {
             stats.update();
             step += 0.1;
 
-            
+            var curTime = new Date().getTime();
+            // var deltaTime = (curTime - time)/1000.0;
+            var deltaTime = 0;
+            time = curTime;
 
+            if(isShrink){
+                curScale -= speed * deltaTime;
+                if(curScale < min){
+                    curScale = min;
+                    isShrink = false;
+                }
+            }else{
+                curScale += speed * deltaTime;
+                if(curScale > 1){
+                    curScale = 1;
+                    isShrink = true;
+                }
+            }
+            
+            box3.scale.x = curScale;
+            box3.scale.y = curScale;
+            box3.scale.z = curScale;
+
+            box4.scale.x = curScale;
+            box4.scale.y = curScale;
+            box4.scale.z = curScale;
 
             if (phase > 2 * Math.PI) {
                 invert = invert * -1;
@@ -120,12 +158,10 @@
                 phase += 0.03;
             }
 
-
             // render using requestAnimationFrame
             requestAnimationFrame(render);
             webGLRenderer.render(scene, camera);
         }
-
 
         function initStats() {
 
