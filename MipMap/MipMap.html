@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Mip Map</title>
+    <script type="text/javascript" src="../libs/three.js"></script>
+    <script type="text/javascript" src="../libs/stats.js"></script>
+    <style>
+        body {
+            /* set margin to 0 and overflow to hidden, to go fullscreen */
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<div id="Stats-output">
+</div>
+<!-- Div which will hold the Output -->
+<div id="WebGL-output">
+</div>
+
+<!-- Javascript code that runs our Three.js examples -->
+<script type="text/javascript">
+
+    // once everything is loaded, we run our Three.js stuff.
+    function init() {
+
+        var stats = initStats();
+
+        // create a scene, that will hold all our elements such as objects, cameras and lights.
+        var scene = new THREE.Scene();
+
+        // create a camera, which defines where we're looking at.
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        // create a render and set the size
+        var webGLRenderer = new THREE.WebGLRenderer();
+        webGLRenderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+        webGLRenderer.setSize(window.innerWidth, window.innerHeight);
+        webGLRenderer.shadowMapEnabled = true;
+
+        var sphere1 = createMesh(new THREE.BoxGeometry(15, 15, 15), "mip-low-res-enlarged(1).png", THREE.NearestFilter);
+        sphere1.rotation.y = 0;
+        sphere1.position.x = 12;
+        scene.add(sphere1);
+
+        var sphere2 = createMesh(new THREE.BoxGeometry(15, 15, 15), "mip-low-res-enlarged(1).png", THREE.NearestMipmapNearestFilter);
+        sphere2.rotation.y = 0;
+        sphere2.position.x = -12;
+        scene.add(sphere2);
+        console.log(sphere2.geometry.faceVertexUvs);
+
+    
+
+        // position and point the camera to the center of the scene
+        camera.position.x = 00;
+        camera.position.y = 12;
+        camera.position.z = 38;
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+        var ambiLight = new THREE.AmbientLight(0xffffff);
+        scene.add(ambiLight);
+
+
+
+        // add the output of the renderer to the html element
+        document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
+
+        // call the render function
+        var step = 0;
+
+//        var polyhedron = createMesh(new THREE.PolyhedronGeometry(vertices, faces, controls.radius, controls.detail));
+
+        
+
+
+        render();
+
+        function createMesh(geom, imageFile, mipmap) {
+
+            if (mipmap) {
+                var t = THREE.ImageUtils.loadTexture("../assets/textures/general/" + imageFile);
+                t.magFilter = mipmap;
+                t.minFilter = mipmap;
+                var mat2 = new THREE.MeshBasicMaterial();
+                mat2.map = t;
+                var mesh = new THREE.Mesh(geom, mat2);
+                return mesh;
+            } else {
+                var t = THREE.ImageUtils.loadTexture("../assets/textures/general/" + imageFile);
+                var mat1 = new THREE.MeshBasicMaterial({
+                    map: t
+                });
+                var mesh = new THREE.Mesh(geom, mat1);
+                return mesh;
+            }
+
+            return mesh;
+        }
+
+        
+
+        var invert = 1;
+        var phase = 0;
+
+        function render() {
+            stats.update();
+            step += 0.1;
+
+            
+
+
+            if (phase > 2 * Math.PI) {
+                invert = invert * -1;
+                phase -= 2 * Math.PI;
+            } else {
+                phase += 0.03;
+            }
+
+
+            // render using requestAnimationFrame
+            requestAnimationFrame(render);
+            webGLRenderer.render(scene, camera);
+        }
+
+
+        function initStats() {
+
+            var stats = new Stats();
+            stats.setMode(0); // 0: fps, 1: ms
+
+            // Align top-left
+            stats.domElement.style.position = 'absolute';
+            stats.domElement.style.left = '0px';
+            stats.domElement.style.top = '0px';
+
+            document.getElementById("Stats-output").appendChild(stats.domElement);
+
+            return stats;
+        }
+    };
+
+    window.onload = init;
+
+
+</script>
+</body>
+</html>
