@@ -3,14 +3,13 @@
 <html>
 
 <head>
-    <title>Example 10.11 - Video texture - non canvas</title>
+    <title>Tekstur Video</title>
     <script type="text/javascript" src="../libs/three.js"></script>
 
     <script type="text/javascript" src="../libs/stats.js"></script>
     <script type="text/javascript" src="../libs/dat.gui.js"></script>
     <style>
         body {
-            /* set margin to 0 and overflow to hidden, to go fullscreen */
             margin: 0;
             overflow: hidden;
         }
@@ -22,29 +21,23 @@
 </div>
 
 <video id="video" style="display: none; position: absolute; left: 15px; top: 75px;"
-       src="../assets/movies/Big_Buck_Bunny_small.ogv" controls="true" autoplay="true"></video>
+       src="../assets/movies/Attack on Titan.ogv" controls="true" autoplay="true"></video>
 
-<!-- Div which will hold the Output -->
 <div id="WebGL-output">
 </div>
 
-<!-- Javascript code that runs our Three.js examples -->
 <script type="text/javascript">
 
     var texture;
 
-    // once everything is loaded, we run our Three.js stuff.
     function init() {
 
         var stats = initStats();
 
-        // create a scene, that will hold all our elements such as objects, cameras and lights.
         var scene = new THREE.Scene();
 
-        // create a camera, which defines where we're looking at.
         var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-        // create a render and set the size
         var webGLRenderer = new THREE.WebGLRenderer();
         webGLRenderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
         webGLRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -60,7 +53,6 @@
         scene.add(cube);
 
 
-        // position and point the camera to the center of the scene
         camera.position.x = 00;
         camera.position.y = 1;
         camera.position.z = 28;
@@ -73,15 +65,10 @@
         light.position.set(0, 30, 20);
         scene.add(light);
 
-        // add the output of the renderer to the html element
         document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
 
-        // call the render function
         var step = 0;
 
-//        var polyhedron = createMesh(new THREE.PolyhedronGeometry(vertices, faces, controls.radius, controls.detail));
-
-        // setup the control gui
         var controls = new function () {
 
             this.showVideo = false;
@@ -117,7 +104,6 @@
             var faceMaterial = new THREE.MeshFaceMaterial(materialArray);
 
 
-            // create a multimaterial
             var mesh = new THREE.Mesh(geom, faceMaterial);
 
             return mesh;
@@ -133,7 +119,6 @@
             }
 
 
-            // render using requestAnimationFrame
             requestAnimationFrame(render);
             webGLRenderer.render(scene, camera);
         }
@@ -141,9 +126,8 @@
         function initStats() {
 
             var stats = new Stats();
-            stats.setMode(0); // 0: fps, 1: ms
+            stats.setMode(0); 
 
-            // Align top-left
             stats.domElement.style.position = 'absolute';
             stats.domElement.style.left = '0px';
             stats.domElement.style.top = '0px';
@@ -158,6 +142,3 @@
 
 </body>
 </html>
-
-
-
